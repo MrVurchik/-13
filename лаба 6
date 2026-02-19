@@ -1,0 +1,54 @@
+# Використовуємо range(1, 11), щоб отримати числа від 1 до 10
+numbers_list = list(range(1, 11))
+
+numbers_list.append(11)     # Додаємо число 11 в кінець
+numbers_list.remove(5)      # Видаляємо саме число 5 зі списку
+numbers_list.sort(reverse=True)  # Сортуємо список у зворотному порядку
+
+print("Відсортований список чисел:", numbers_list)
+
+# Створюємо словник студента з осмисленими назвами ключів
+student_info = {
+    'name': 'Vladik',
+    'age': 18,
+    'specialty': 'developer'
+}
+
+student_info['age'] = 67            # Оновлюємо вік
+student_info['average_score'] = 8   # Додаємо новий ключ для середнього балу
+
+print("Інформація про студента:", student_info)
+
+even_numbers = set()  # Множина для парних чисел
+odd_numbers = set()   # Множина для непарних чисел
+
+for i in range(1, 11):
+    if i % 2 == 0:
+        even_numbers.add(i)
+    else:
+        odd_numbers.add(i)
+
+print("\nОперації над множинами:")
+print(f"Парні: {even_numbers}, Непарні: {odd_numbers}")
+print("Об'єднання:", even_numbers | odd_numbers)
+print("Перетин:", even_numbers & odd_numbers)
+print("Різниця (Парні - Непарні):", even_numbers - odd_numbers)
+print("Різниця (Непарні - Парні):", odd_numbers - even_numbers)
+words_storage = []  # Список для зберігання введених слів
+
+while True:
+    # Забезпечуємо коректність введення та можливість виходу
+    user_input = input("\nВкажіть слово (або 'q' для виходу): ")
+    
+    if user_input == 'q':
+        break
+    
+    if user_input:  # Додаємо слово, тільки якщо воно не порожнє
+        words_storage.append(user_input)
+
+# Видаляємо дублікати через set та перетворюємо назад у список для сортування
+unique_words = set(words_storage)
+new_list = list(unique_words)
+new_list.sort()  # Сортуємо за алфавітом
+
+print("Список унікальних відсортованих слів:", new_list)
