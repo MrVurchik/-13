@@ -1,0 +1,77 @@
+def add_numbers(number1, number2):
+    """
+    Виконує додавання двох чисел.
+
+    Значення:
+        number1 (float): Перше число.
+        number2 (float): Друге число.
+
+   Повертає:
+        float: Сума чисел.
+    """
+    return number1 + number2
+
+def subtract_numbers(number1, number2):
+    """
+    Виконує віднімання другого числа від першого.
+
+    Значення:
+        number1 (float): Зменшуване.
+        number2 (float): Від'ємник.
+
+   Повертає:
+        float: Різниця чисел.
+    """
+    return number1 - number2
+
+def multiply_numbers(number1, number2):
+    """
+    Виконує множення двох чисел.
+
+    Значення:
+        number1 (float): Перший множник.
+        number2 (float): Другий множник.
+
+    Повертає:
+        float: Добуток чисел.
+    """
+    return number1 * number2
+
+def divide_numbers(number1, number2):
+    """
+    Виконує ділення першого числа на друге.
+    Перевіряє, чи не є дільник нулем.
+
+    Значення:
+        number1 (float): Ділене.
+        number2 (float): Дільник.
+
+    Повертає:
+        float або str: Результат ділення або повідомлення про помилку.
+    """
+    if number2 == 0:
+        return "Помилка: ділення на нуль неможливе!"
+    return number1 / number2
+
+# Крок 1: Введення даних з обробкою винятків (try-except)
+try:
+    # Використовуємо float, щоб можна було рахувати не лише цілі числа
+    num1 = float(input("Введіть перше число: "))
+    num2 = float(input("Введіть друге число: "))
+
+    # Крок 2: Виклик функцій та виведення результатів
+    print(f"Додавання: {add_numbers(num1, num2)}")
+    print(f"Віднімання: {subtract_numbers(num1, num2)}")
+    print(f"Множення: {multiply_numbers(num1, num2)}")
+    print(f"Ділення: {divide_numbers(num1, num2)}")
+
+    # Крок 3: Перевірка документації (вимога 5.2.2)
+    print("\n--- Перевірка документації функцій ---")
+    print(f"Рядок документації додавання: {add_numbers.__doc__}")
+    print(f"Рядок документації віднімання: {subtract_numbers.__doc__}")
+    print(f"Рядок документації ділення: {divide_numbers.__doc__}")
+    print(f"Рядок документації множення: {multiply_numbers.__doc__}")
+
+except ValueError:
+    # Обробка випадку, коли введено не число
+    print("Помилка: введено нечислове значення. Будь ласка, використовуйте цифри.")
