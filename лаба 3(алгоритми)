@@ -1,0 +1,82 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <string>
+#include <chrono> 
+
+using namespace std;
+using namespace  chrono;
+int main() {
+    setlocale(LC_ALL, "Ukrainian");
+     vector<int> arr = { 5, 3, 43, 4, 6, 32, -2, -1, 12 };
+    int target = 6;
+    int foundIdx;
+    for (int i = 0; i < (int)arr.size(); i++) {
+        if (arr[i] == target) {
+            foundIdx = i;
+            break;
+        }
+    }
+    for (int i = 0; i < (int)arr.size() - 1; i++) {
+        for (int j = 0; j < (int)arr.size() - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+    arr.insert(arr.begin() + 3, 100);
+    arr.erase(arr.begin() + 0);
+    cout << "--- Масиви ---" << endl;
+    cout << "Сортований масив: ";
+    for (int x : arr) cout << x << " ";
+    cout << "\nІндекс елемента 6: " << foundIdx << endl;
+   
+    map<string, int> dict;
+
+    dict["User1"] = 101;
+    dict["User2"] = 202;
+    dict["User3"] = 303;
+    dict["User1"] = 555; 
+    string searchKey = "User2";
+    if (dict.count(searchKey)) {
+        int value = dict[searchKey];
+    }
+
+    dict.erase("User3"); 
+
+    
+    map<int, int> bigDict;
+    auto start = chrono::high_resolution_clock::now();
+    for (int i = 0; i < 100000; i++) {
+        bigDict[i] = i;
+    }
+    auto end = high_resolution_clock::now();
+    duration<double> duration = end - start;
+    cout << "\n--- Словники ---" << endl;
+    cout << "Час роботи з великим набором: " << duration.count() << " сек." << endl;
+
+    int minVal = arr[0];
+    int maxVal = arr[0];
+    double sum = 0;
+
+    for (int x : arr) {
+        if (x < minVal) minVal = x;
+        if (x > maxVal) maxVal = x;
+        sum += x;
+    }
+    double avg = sum / (double)arr.size();
+    cout << "\n--- Статистика ---" << endl;
+    cout << "Min: " << minVal << " | Max: " << maxVal << " | Average: " << avg << endl;
+    map<int, int> counts;
+    for (int x : arr) {
+        counts[x]++;
+    }
+    cout << "\n--- Групування ---" << endl;
+    for (auto const& pair : counts) {
+        cout << "Число " << pair.first << " зустрілось " << pair.second << " разів" << endl;
+    }
+
+    return 0;
+}
