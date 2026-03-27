@@ -1,0 +1,89 @@
+#include <iostream>
+#include <algorithm>
+#include <chrono> 
+#include <ctime>   
+#include <cstdlib> 
+
+using namespace std;
+using namespace std::chrono;
+
+// Схема Хоара для QuickSort
+int SortHoara(int a[], int left, int right) {
+    int pivot = a[(left + right) / 2];
+    int i = left - 1;
+    int j = right + 1;
+    while (true) {
+        do { i++; } while (a[i] < pivot);
+        do { j--; } while (a[j] > pivot);
+        if (i >= j) return j;
+        swap(a[i], a[j]);
+    }
+}
+
+// Рекурсивна функція QuickSort
+void QucklySort(int a[], int left, int right) {
+    if (left < right) {
+        int pivot2 = SortHoara(a, left, right);
+        QucklySort(a, left, pivot2);
+        QucklySort(a, pivot2 + 1, right);
+    }
+}
+
+// Сортування Шелла
+void SortShela(int arr[], int n) {
+    for (int gap = n / 2; gap > 0; gap /= 2) {
+        for (int i = gap; i < n; i++) {
+            int temp = arr[i];
+            int j;
+            for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
+                arr[j] = arr[j - gap];
+            }
+            arr[j] = temp;
+        }
+    }
+}
+
+int main() {
+    
+    srand(time(0));
+
+    int sizes[] = { 100, 1000, 10000 };
+
+    for (int n : sizes) {
+        // Створюємо масиви динамічно
+        int* arr2 = new int[n];
+        int* copyarr2 = new int[n];
+        int* copy2arr2 = new int[n];
+
+        for (int j = 0; j < n; j++) {
+             arr2[j] = rand() % 10000;
+            copyarr2[j] = arr2[j];
+            copy2arr2[j] = arr2[j];
+        }
+
+        cout << "------------- Result for " << n << " el: --------------" << endl;
+
+        // Замір для QuickSort
+        cout << "QuickSort: ";
+        auto start1 = high_resolution_clock::now();
+        QucklySort(copyarr2, 0, n - 1);
+        auto stop1 = high_resolution_clock::now();
+        auto duration1 = duration_cast<microseconds>(stop1 - start1);
+        cout << "Result time: " << duration1.count() << " mks" << endl;
+
+        // Замір для ShellSort
+        cout << "SortShela: ";
+        auto start2 = high_resolution_clock::now();
+        SortShela(copy2arr2, n);
+        auto stop2 = high_resolution_clock::now();
+        auto duration2 = duration_cast<microseconds>(stop2 - start2);
+        cout << "Result time: " << duration2.count() << " mks" << endl;
+
+        // Чистимо пам'ять
+        delete[] arr2;
+        delete[] copyarr2;
+        delete[] copy2arr2;
+    }
+
+    return 0;
+}
