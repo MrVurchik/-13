@@ -1,0 +1,47 @@
+while True:
+    word = input("Введіть ціле число (щоб зупинити програму введіть 'q'): ")
+    if word.lower() == "q": 
+        break
+    try:
+        number = int(word)
+    except ValueError:
+        print("Не співпадає тип даних, будь ласка спробуйте ще раз.")
+    else:
+        print(f"Ви ввели число: {number}")
+
+filename = "file.txt"
+try:
+    with open(filename, 'r', encoding='utf-8') as keyfile:
+        text = keyfile.read()
+        print(f"Вміст файлу: {text}")
+except FileNotFoundError:
+    print("Файл не знайдено. Створюю новий...")
+    with open(filename, 'w', encoding='utf-8') as keyfile:
+        keyfile.write("Новий файл створено")
+
+class LittleAgeError(Exception):
+    """Виключення, якщо вік менше 18 років."""
+    pass
+
+def compare_age(age):
+    if age < 18:
+        raise LittleAgeError("Користувач має бути старшим 18 років")
+        
+
+try:
+    user_age = int(input("Введіть ваш вік: "))
+    compare_age(user_age)
+except LittleAgeError as e:
+    print(f"Помилка: {e}")
+except ValueError:
+    print("Помилка: введіть вік числом!")
+else:
+    print(f"Ваш вік: {user_age}.")
+
+
+
+
+
+
+
+
