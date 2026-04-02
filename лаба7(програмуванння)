@@ -1,7 +1,11 @@
+import json
+import os
+
+# --- 8.2.1 ---
 filename = "file.txt"
 with open(filename, "w", encoding="utf-8") as keyfile:
     for i in range(1, 11):
-        keyfile.write(str(i + "\n")) 
+        keyfile.write(str(i) + "\n") 
 
 print("Парні числа з файлу:")
 with open(filename, "r", encoding="utf-8") as keyfile:
@@ -10,5 +14,52 @@ with open(filename, "r", encoding="utf-8") as keyfile:
         if num % 2 == 0:
             print(num)
 
+# --- 8.2.2 ---
+sentense = input("Enter anything text: ")
+sentense2 = ""
+filename_json = "text_file.txt"
+with open(filename_json, "w", encoding="utf-8") as keyfile:
+    json.dump(sentense, keyfile, ensure_ascii=False)
 
+with open(filename_json, "r", encoding="utf-8") as keyfile:
+    value = keyfile.readlines()
+print("Number lines in file:", len(value))
 
+for i in value:
+    sentense2 += i.strip()
+print("Number symbol in sentense:", len(sentense2))
+
+# --- 8.2.3 ---
+if os.path.exists(filename_json):
+    os.rename(filename_json, "file_backup.txt")
+else:
+    print("File didn't find")
+
+# --- 8.2.4 ---
+namefile1 = input("Enter name the file with end (.txt): ")
+namefile2 = input("Enter name the file to transfer data to (.txt): ")
+
+i = 0
+while i < 2:
+    try:
+        with open(namefile1, "r", encoding="utf-8") as file22:
+            data = file22.read()
+        
+    except FileNotFoundError:
+        print("file dont find")
+        print(f"Create this file: {namefile1}")
+        with open(namefile1, "w", encoding="utf-8") as file22:
+            file22.write("i always come back")
+        # Тут i збільшиться, і цикл піде на друге коло
+    else: 
+        with open(namefile2, "w", encoding="utf-8") as file23:
+            file23.write(data)
+        print("Done!")
+    i += 1
+        
+            
+        
+        
+        
+        
+       
