@@ -1,0 +1,118 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <chrono> 
+#include <cmath>
+#include <ctime> 
+
+using namespace std;
+using namespace std::chrono;
+
+
+void InsertSort(vector<int>& f) {
+    for (int i = 1; i < f.size(); i++) {
+        int key = f[i];
+        int j = i - 1;
+        while (j >= 0 && f[j] > key) {
+            f[j + 1] = f[j];
+            j--;
+        }
+        f[j + 1] = key;
+    }
+}
+
+
+void CountSort(vector<int>& arr) {
+    if (arr.empty()) return;
+
+    int maxVal = arr[0];
+    for (int i = 1; i < arr.size(); i++) {
+        if (arr[i] > maxVal) maxVal = arr[i];
+    }
+
+    vector<int> count(maxVal + 1, 0);
+    for (int i = 0; i < arr.size(); i++) {
+        count[arr[i]]++;
+    }
+
+    int index = 0;
+    for (int i = 0; i <= maxVal; i++) {
+        while (count[i] > 0) {
+            arr[index++] = i;
+            count[i]--;
+        }
+    }
+}
+void BucketSort(vector<int>& arr) {
+    int n = arr.size();
+    if (n <= 1) return;
+
+    int maxVal = arr[0], minVal = arr[0];
+    for (int i = 1; i < n; i++) {
+        if (arr[i] > maxVal) maxVal = arr[i];
+        if (arr[i] < minVal) minVal = arr[i];
+    }
+
+    int k = (int)sqrt(n);
+    if (k < 2) k = 2;
+
+    vector<vector<int>> buckets(k);
+
+    for (int i = 0; i < n; i++) {
+        int bucketIndex = 0;
+        if (maxVal != minVal) {
+            float normalized = (float)(arr[i] - minVal) / (maxVal - minVal);
+            bucketIndex = (int)(normalized * (k - 1));
+        }
+        buckets[bucketIndex].push_back(arr[i]);}
+
+    int index = 0;
+    for (int i = 0; i < k; i++) {
+        InsertSort(buckets[i]);
+        for (int val : buckets[i]) {
+            arr[index] = val;
+            index++;
+        }
+    }
+}
+
+int main() {
+    setlocale(LC_ALL, "Ukrainian");
+    srand(time(0)); 
+
+    int n = 10000;
+    vector<int> arr2(n);
+    int num2 = 2;
+
+    for (int e = 0; e < 3; e++) {
+        if (e == 1) {
+            num2 = 100000;
+            cout << "\n---------Час сортировки для великого діапазону значень----------" << endl;
+        }
+        else if (e == 2) {
+            num2 = 10000;
+            cout << "\n---------Час сортировки для рівномірно розподілених----------" << endl;
+        }
+        else {
+            num2 = 2;
+            cout << "\n---------Час сортировки для однакових елементів----------" << endl;
+        }
+
+        
+        for (int j = 0; j < n; j++) {
+            arr2[j] = rand() % num2;}
+
+        vector<int> copyarr = arr2;
+        auto start1 = high_resolution_clock::now();
+        CountSort(arr2);
+        auto stop1 = high_resolution_clock::now();
+        cout << "CountSort: " << duration_cast<microseconds>(stop1 - start1).count() << " mcr" << endl;
+        auto start2 = high_resolution_clock::now();
+        BucketSort(copyarr);
+        auto stop2 = high_resolution_clock::now();
+        cout << "BucketSort: " << duration_cast<microseconds>(stop2 - start2).count() << " mcr" << endl;
+    }
+
+    return 0;
+}
+        
