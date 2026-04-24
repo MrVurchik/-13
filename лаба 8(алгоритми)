@@ -1,0 +1,187 @@
+#include <iostream>
+
+using namespace std;
+
+// --- ОДНОСПРЯМОВАНИЙ СПИСОК ---
+class Node {
+public:
+    int data;       
+    Node* next;     
+
+    
+    Node(int val) {
+        data = val;         
+        next = nullptr;     
+    }
+};
+
+class SinglyLinkedList {
+private:
+    Node* head;     
+public:
+    SinglyLinkedList() {
+        head = nullptr;     
+    }
+
+    // Додавання на початок: новий вузол стає першим
+    void addToStart(int val) {
+        Node* newNode = new Node(val);
+        newNode->next = head;       
+        head = newNode;             
+    }
+
+    // Додавання в кінець: біжимо до останнього вузла
+    void addToEnd(int val) {
+        Node* newNode = new Node(val);
+        if (head == nullptr) {      
+            head = newNode;
+            return;
+        }
+        Node* current = head;
+        while (current->next != nullptr) { 
+            current = current->next;
+        }
+        current->next = newNode;    
+    }
+
+    // Видалення елемента за числом
+    void remove(int key) {
+        if (head == nullptr) return;
+
+        
+        if (head->data == key) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;            
+            return;
+        }
+
+        Node* current = head;
+        // Шукаємо вузол, що стоїть ПЕРЕД тим, який хочемо видалити
+        while (current->next != nullptr && current->next->data != key) {
+            current = current->next;
+        }
+
+        if (current->next != nullptr) {
+            Node* temp = current->next;
+            current->next = current->next->next; 
+            delete temp;            
+        }
+    }
+
+    void display() {
+        Node* current = head;
+        while (current != nullptr) {
+            cout << current->data << " -> ";
+            current = current->next;
+        }
+        cout << "NULL" << endl;
+    }
+};
+
+// --- ДВОСПРЯМОВАНИЙ СПИСОК ---
+class DNode {
+public:
+    int data;
+    DNode* next;
+    DNode* prev;    
+
+    DNode(int val) {
+        data = val;
+        next = nullptr;
+        prev = nullptr;
+    }
+};
+
+class DoublyLinkedList {
+private:
+    DNode* head;
+    DNode* tail;    
+public:
+    DoublyLinkedList() {
+        head = nullptr;
+        tail = nullptr;
+    }
+
+    void addToStart(int val) {
+        DNode* newNode = new DNode(val);
+        if (head == nullptr) {
+            head = tail = newNode;
+        }
+        else {
+            newNode->next = head;
+            head->prev = newNode;   
+            head = newNode;
+        }
+    }
+
+    void addToEnd(int val) {
+        DNode* newNode = new DNode(val);
+        if (tail == nullptr) {
+            head = tail = newNode;
+        }
+        else {
+            newNode->prev = tail;   
+            tail->next = newNode;
+            tail = newNode;         
+        }
+    }
+
+    void remove(int key) {
+        if (head == nullptr) return;
+
+        DNode* current = head;
+        while (current != nullptr && current->data != key) {
+            current = current->next;
+        }
+
+        if (current == nullptr) return; 
+
+        if (current->prev != nullptr) {
+            current->prev->next = current->next;
+        }
+        else {
+            head = current->next;
+        }
+
+        if (current->next != nullptr) {
+            current->next->prev = current->prev;
+        }
+        else {
+            tail = current->prev;
+        }
+
+        delete current; 
+    }
+
+    void display() {
+        DNode* current = head;
+        while (current != nullptr) {
+            cout << current->data << " <-> ";
+            current = current->next;
+        }
+        cout << "NULL" << endl;
+    }
+};
+
+int main() {
+    cout << "--- Test Singly Linked List ---" << endl;
+    SinglyLinkedList sll;
+    sll.addToStart(10);
+    sll.addToEnd(20);
+    sll.addToEnd(30);
+    sll.display();
+    sll.remove(20);
+    sll.display();
+
+    cout << "\n--- Test Doubly Linked List ---" << endl;
+    DoublyLinkedList dll;
+    dll.addToStart(100);
+    dll.addToEnd(200);
+    dll.addToEnd(300);
+    dll.display();
+    dll.remove(200);
+    dll.display();
+
+    return 0;
+}
