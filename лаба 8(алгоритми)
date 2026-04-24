@@ -23,14 +23,14 @@ public:
         head = nullptr;     
     }
 
-    // Додавання на початок: новий вузол стає першим
+    
     void addToStart(int val) {
         Node* newNode = new Node(val);
         newNode->next = head;       
         head = newNode;             
     }
 
-    // Додавання в кінець: біжимо до останнього вузла
+    
     void addToEnd(int val) {
         Node* newNode = new Node(val);
         if (head == nullptr) {      
@@ -69,7 +69,7 @@ public:
         }
     }
 
-    void display() {
+    void show() {
         Node* current = head;
         while (current != nullptr) {
             cout << current->data << " -> ";
@@ -154,7 +154,7 @@ public:
         delete current; 
     }
 
-    void display() {
+    void show() {
         DNode* current = head;
         while (current != nullptr) {
             cout << current->data << " <-> ";
@@ -170,18 +170,18 @@ int main() {
     sll.addToStart(10);
     sll.addToEnd(20);
     sll.addToEnd(30);
-    sll.display();
+    sll.show();
     sll.remove(20);
-    sll.display();
+    sll.show();
 
     cout << "\n--- Test Doubly Linked List ---" << endl;
     DoublyLinkedList dll;
     dll.addToStart(100);
     dll.addToEnd(200);
     dll.addToEnd(300);
-    dll.display();
+    dll.show();
     dll.remove(200);
-    dll.display();
+    dll.show();
 
     return 0;
 }
