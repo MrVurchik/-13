@@ -1,0 +1,56 @@
+# завдання 10.2.1. Клас "Книга"
+class Book():
+    def __init__(self, name, author, age_make):
+        self.name = name
+        self.author = author
+        self.age_make = age_make
+
+    def __str__(self):
+        return f"'{self.name}', автор: {self.author}, {self.age_make} рік"
+
+    def show(self):
+        print("Назва: " + self.name + " Автор: " + self.author + " Рік видання: " + str(self.age_make))
+
+my_book = Book("Fnaf", "Scott", 2007)
+my_book.show()
+print(my_book)
+
+# завдання 10.2.2. Клас "Студент"
+class Student():
+    def __init__(self, name, surname, middle_rating):
+        self.name = name
+        self.surname = surname
+        self.middle_rating = middle_rating
+
+    def level_student(self):
+        if self.middle_rating < 6:
+            print(f"Student {self.name} {self.surname}: level is low")
+        elif self.middle_rating >= 6 and self.middle_rating <= 10:
+            print(f"Student {self.name} {self.surname}: level is middle")
+        else:
+            print(f"Student {self.name} {self.surname}: level is high")
+
+studen1 = Student("Scott", "Cout", 5)
+studen1.level_student()
+studen2 = Student("Scott", "Epshtein", 12)
+studen2.level_student()
+studen3 = Student("Scott", "Ronaldo", 9)
+studen3.level_student()
+
+# завдання 10.2.3. Клас "Прямокутник"
+class Rectangle():
+    def __init__(self, length, width):
+        self.length = length
+        self.width = width
+
+    def area(self):
+        return self.length * self.width
+
+    def perimeter(self):
+        return 2 * (self.length + self.width)
+
+    def __str__(self):
+        return f"Area: {self.area()}, Perimeter: {self.perimeter()}"
+
+rectangle = Rectangle(13, 34)
+print(rectangle)
