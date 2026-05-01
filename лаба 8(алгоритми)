@@ -1,187 +1,111 @@
 #include <iostream>
+#include <chrono>
 
 using namespace std;
-
-// --- ОДНОСПРЯМОВАНИЙ СПИСОК ---
-class Node {
-public:
-    int data;       
-    Node* next;     
-
-    
-    Node(int val) {
-        data = val;         
-        next = nullptr;     
-    }
-};
-
-class SinglyLinkedList {
-private:
-    Node* head;     
-public:
-    SinglyLinkedList() {
-        head = nullptr;     
-    }
-
-    
-    void addToStart(int val) {
-        Node* newNode = new Node(val);
-        newNode->next = head;       
-        head = newNode;             
-    }
-
-    
-    void addToEnd(int val) {
-        Node* newNode = new Node(val);
-        if (head == nullptr) {      
-            head = newNode;
-            return;
-        }
-        Node* current = head;
-        while (current->next != nullptr) { 
-            current = current->next;
-        }
-        current->next = newNode;    
-    }
-
-    // Видалення елемента за числом
-    void remove(int key) {
-        if (head == nullptr) return;
-
-        
-        if (head->data == key) {
-            Node* temp = head;
-            head = head->next;
-            delete temp;            
-            return;
-        }
-
-        Node* current = head;
-        // Шукаємо вузол, що стоїть ПЕРЕД тим, який хочемо видалити
-        while (current->next != nullptr && current->next->data != key) {
-            current = current->next;
-        }
-
-        if (current->next != nullptr) {
-            Node* temp = current->next;
-            current->next = current->next->next; 
-            delete temp;            
-        }
-    }
-
-    void show() {
-        Node* current = head;
-        while (current != nullptr) {
-            cout << current->data << " -> ";
-            current = current->next;
-        }
-        cout << "NULL" << endl;
-    }
-};
-
-// --- ДВОСПРЯМОВАНИЙ СПИСОК ---
-class DNode {
+class StackNode {
 public:
     int data;
-    DNode* next;
-    DNode* prev;    
-
-    DNode(int val) {
-        data = val;
+    StackNode* next;
+    StackNode(int value) {
+        data = value;
         next = nullptr;
-        prev = nullptr;
     }
 };
-
-class DoublyLinkedList {
+class Stack {
 private:
-    DNode* head;
-    DNode* tail;    
+    int* stackArray;
+    int top;
+    int capacity;
+
 public:
-    DoublyLinkedList() {
-        head = nullptr;
-        tail = nullptr;
+    Stack(int size) {
+        capacity = size;
+        stackArray = new int[size];
+        top = -1;
     }
 
-    void addToStart(int val) {
-        DNode* newNode = new DNode(val);
-        if (head == nullptr) {
-            head = tail = newNode;
-        }
-        else {
-            newNode->next = head;
-            head->prev = newNode;   
-            head = newNode;
-        }
+    ~Stack() {
+        delete[] stackArray;
     }
 
-    void addToEnd(int val) {
-        DNode* newNode = new DNode(val);
-        if (tail == nullptr) {
-            head = tail = newNode;
-        }
-        else {
-            newNode->prev = tail;   
-            tail->next = newNode;
-            tail = newNode;         
+    void Push(int value) {
+        if (top < capacity - 1) {
+            stackArray[++top] = value;
         }
     }
 
-    void remove(int key) {
-        if (head == nullptr) return;
-
-        DNode* current = head;
-        while (current != nullptr && current->data != key) {
-            current = current->next;
-        }
-
-        if (current == nullptr) return; 
-
-        if (current->prev != nullptr) {
-            current->prev->next = current->next;
-        }
-        else {
-            head = current->next;
-        }
-
-        if (current->next != nullptr) {
-            current->next->prev = current->prev;
-        }
-        else {
-            tail = current->prev;
-        }
-
-        delete current; 
-    }
-
-    void show() {
-        DNode* current = head;
-        while (current != nullptr) {
-            cout << current->data << " <-> ";
-            current = current->next;
-        }
-        cout << "NULL" << endl;
+    int Pop2() {
+        if (top >= 0) return stackArray[top--];
+        return -1;
     }
 };
+class LinkedListStack {
+private:
+    StackNode* head;
 
+public:
+    LinkedListStack() {
+        head = nullptr;
+    }
+
+    ~LinkedListStack() {
+        while (head != nullptr) {
+            PopStart();
+        }
+    }
+
+    void PushStart(int value) {
+        StackNode* newNode = new StackNode(value);
+        newNode->next = head;
+        head = newNode;
+    }
+
+    int PopStart() {
+        if (head != nullptr) {
+            StackNode* temp = head;
+            int value = head->data;
+            head = head->next;
+            delete temp;
+            return value;
+        }
+        return -1;
+    }
+};
 int main() {
-    cout << "--- Test Singly Linked List ---" << endl;
-    SinglyLinkedList sll;
-    sll.addToStart(10);
-    sll.addToEnd(20);
-    sll.addToEnd(30);
-    sll.show();
-    sll.remove(20);
-    sll.show();
+    int sizes[] = { 100, 1000, 10000 };
+    cout << "------ Array-based Stack -------" << endl;
+    for (int size : sizes) {
+        Stack s(size);
+        auto start = chrono::high_resolution_clock::now();
+        for (int i = 0; i < size; i++) s.Push(i);
+        auto end = chrono::high_resolution_clock::now();
+        auto pushTime = chrono::duration_cast<chrono::nanoseconds>(end - start);
 
-    cout << "\n--- Test Doubly Linked List ---" << endl;
-    DoublyLinkedList dll;
-    dll.addToStart(100);
-    dll.addToEnd(200);
-    dll.addToEnd(300);
-    dll.show();
-    dll.remove(200);
-    dll.show();
+        start = chrono::high_resolution_clock::now();
+        for (int i = 0; i < size; i++) s.Pop2();
+        end = chrono::high_resolution_clock::now();
+        auto popTime = chrono::duration_cast<chrono::nanoseconds>(end - start);
+
+        cout << "Size " << size << " | Push: " << pushTime.count() << " ns | Pop: " << popTime.count() << " ns" << endl;
+    }
+
+    
+    cout << "------ Linked List-based Stack -------" << endl;
+    for (int size : sizes) {
+        LinkedListStack ls;
+
+        auto start = chrono::high_resolution_clock::now();
+        for (int i = 0; i < size; i++) ls.PushStart(i);
+        auto end = chrono::high_resolution_clock::now();
+        auto pushTime = chrono::duration_cast<chrono::nanoseconds>(end - start);
+
+        start = chrono::high_resolution_clock::now();
+        for (int i = 0; i < size; i++) ls.PopStart();
+        end = chrono::high_resolution_clock::now();
+        auto popTime = chrono::duration_cast<chrono::nanoseconds>(end - start);
+
+        cout << "Size " << size << " | Push: " << pushTime.count() << " ns | Pop: " << popTime.count() << " ns" << endl;
+    }
 
     return 0;
 }
