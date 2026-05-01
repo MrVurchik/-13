@@ -1,0 +1,132 @@
+#include <iostream>
+#include <chrono>
+
+using namespace std;
+struct Node {
+    int data;
+    Node* next;
+    Node(int value) : data(value), next(nullptr) {}
+};
+
+
+class ArrayQueue {
+private:
+    int* array;
+    int capacity;
+    int head;
+    int tail;
+
+public:
+    ArrayQueue(int size) {
+        capacity = size;
+        array = new int[size];
+        head = 0;
+        tail = -1;
+    }
+
+    ~ArrayQueue() {
+        delete[] array;
+    }
+
+    void Push(int value) {
+        if (tail != capacity - 1) {
+            tail++;
+            array[tail] = value;
+        }
+    }
+
+    int Pop() {
+        if (tail >= head) {
+            int value = array[head];
+            head++;
+            return value;
+        }
+        return -1;
+    }
+};
+
+
+class LinkedQueue {
+private:
+    Node* head;
+    Node* tail;
+    int count;
+
+public:
+    LinkedQueue() : head(nullptr), tail(nullptr), count(0) {}
+
+    ~LinkedQueue() {
+        while (head != nullptr) {
+            PopStart();
+        }
+    }
+
+    void PushEnd(int value) {
+        Node* newNode = new Node(value);
+        if (head == nullptr) {
+            head = tail = newNode;
+        }
+        else {
+            tail->next = newNode;
+            tail = newNode;
+        }
+        count++;
+    }
+
+    int PopStart() {
+        if (head != nullptr) {
+            Node* temp = head;
+            int value = head->data;
+            head = head->next;
+            delete temp;
+            count--;
+            if (head == nullptr) tail = nullptr;
+            return value;
+        }
+        return -1;
+    }
+};
+
+
+int main() {
+    int testSizes[] = { 100, 1000, 10000 };
+     cout << "---------------- ARRAY QUEUE TEST (NANOSECONDS) --------------" << endl;
+    for (int size : testSizes) {
+        cout << "------------------------------------" << endl;
+        ArrayQueue q(size);
+        auto start = chrono::high_resolution_clock::now();
+        for (int i = 0; i < size; i++) q.Push(i);
+        auto end = chrono::high_resolution_clock::now();
+        auto pushDist = chrono::duration_cast<chrono::nanoseconds>(end - start);
+        start = chrono::high_resolution_clock::now();
+        for (int i = 0; i < size; i++) q.Pop();
+        end = chrono::high_resolution_clock::now();
+        auto popDist = chrono::duration_cast<chrono::nanoseconds>(end - start);
+
+        cout << "Elements: " << size << endl;
+        cout << "Push time: " << pushDist.count() << " ns" << endl;
+        cout << "Pop time:  " << popDist.count() << " ns" << endl;
+    }
+
+    cout << "------------ LINKED LIST QUEUE TEST (NANOSECONDS) -------------" << endl;
+    for (int size : testSizes) {
+        cout << "------------------------------------" << endl;
+        LinkedQueue lq;
+
+        auto start = chrono::high_resolution_clock::now();
+        for (int i = 0; i < size; i++) lq.PushEnd(i);
+        auto end = chrono::high_resolution_clock::now();
+        auto pushDist = chrono::duration_cast<chrono::nanoseconds>(end - start);
+
+        start = chrono::high_resolution_clock::now();
+        for (int i = 0; i < size; i++) lq.PopStart();
+        end = chrono::high_resolution_clock::now();
+        auto popDist = chrono::duration_cast<chrono::nanoseconds>(end - start);
+
+        cout << "Elements: " << size << endl;
+        cout << "Push time: " << pushDist.count() << " ns" << endl;
+        cout << "Pop time:  " << popDist.count() << " ns" << endl;
+    }
+
+    return 0;
+}
