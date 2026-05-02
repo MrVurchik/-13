@@ -1,14 +1,45 @@
-#11.2.1. Генератор випадкових чисел
-from datetime import date,timedate
+from datetime import datetime
 from random import randint as r
+import tkinter as tk
+# 11.2.1. Генератор випадкових чисел
 first = int(input("Enter first number: "))
 second = int(input("Enter second number: "))
 print(r(first, second))
 
-#11.2.2. Робота з датами
-date birthday = input("Вкажіть дату народження(день:місяць:рік")
-birthday = datetime.strptime(birthday_str, "%d/%m/%Y").date()
-today = date.today()
-years = today.year - birthday.year
+# 11.2.2. Робота з датами
+date_birthday = input("Вкажіть дату народження (день:місяць:рік): ")
+birthday = datetime.strptime(date_birthday, "%d:%m:%Y")
+now = datetime.now()
 
-print(f"You now {years now} years")
+years = now.year - birthday.year
+print(f"You are {years} years old")
+
+this_year_birthday = birthday.replace(year=now.year)
+
+if this_year_birthday < now:
+    next_birthday = this_year_birthday.replace(year=now.year + 1)
+else:
+    next_birthday = this_year_birthday
+diff = next_birthday - now
+print(f"Your next birthday is in {diff.days} days")
+#11.2.3. Графічний інтерфейс для генерації випадкових подій
+def get_info():
+  a = r(1,5)
+  if(a == 1):
+    label.config(text="Якщо тебе обідили — не обіжайся. Якщо тебе вдарили — не вдаряйся.")
+  elif(a==2):
+    label.config(text="Запам'ятай: одна помилка — і ти помилився.")
+  elif(a==3):
+    label.config(text="Якщо ти впав, то вставай. Якщо ти встав, то не падай.")
+  elif(a==4):
+    label.config(text="Якщо тобі важко — йди до кінця. А якщо дуже важко — хрін з ним, кидай і йди пити чай.")
+  else:
+    label.config(text="Буває так: спочатку ти робиш те, що треба, а потім ти не робиш те, що треба.")
+root = tk.Tk()
+root.title("Сайт для цитат")
+label = tk.Label(root,text ='Вітаємо! Натисніть кнопку')
+label.pack()
+botton = tk.Button(root, text = "Получити цитату",command = get_info)
+botton.pack()
+root.mainloop()
+
