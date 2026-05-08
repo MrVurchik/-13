@@ -15,11 +15,11 @@ public:
         right = nullptr;
     }
 };
+class BinarySearchTree {
     int findMin(Node* node) {
         while (node->left != nullptr) node = node->left;
         return node->data;
     }
-class BinarySearchTree {
 private:
     Node* root;
 
