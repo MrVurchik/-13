@@ -1,0 +1,140 @@
+#include <iostream>
+#include <chrono>
+#include <vector>
+#include <ctime>
+
+using namespace std;
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+    Node(int data) {
+        this->data = data;   
+        left = nullptr;
+        right = nullptr;
+    }
+};
+    int findMin(Node* node) {
+        while (node->left != nullptr) node = node->left;
+        return node->data;
+    }
+class BinarySearchTree {
+private:
+    Node* root;
+
+    Node* deleteRecursive(Node* current, int value) {
+        if (current == nullptr) return nullptr;
+
+        if (value < current->data) {
+            current->left = deleteRecursive(current->left, value);
+        }
+        else if (value > current->data) {
+            current->right = deleteRecursive(current->right, value);
+        }
+        else {
+            if (current->left == nullptr) {
+                Node* temp = current->right;
+                delete current;
+                return temp;
+            }
+            if (current->right == nullptr) {
+                Node* temp = current->left;
+                delete current;
+                return temp;
+            }
+            current->data = findMin(current->right);
+            current->right = deleteRecursive(current->right, current->data);
+        }
+        return current;
+    }
+    void clear(Node* node) {
+        if (node) {
+            clear(node->left);
+            clear(node->right);
+            delete node;
+        }
+    }
+
+public:
+    BinarySearchTree() : root(nullptr) {}
+    ~BinarySearchTree() { clear(root); }
+
+    
+    void insert(int value) {
+        if (!root) {
+            root = new Node(value);
+            return;
+        }
+        Node* curr = root;
+        Node* parent = nullptr;
+        while (curr) {
+            parent = curr;
+            if (value < curr->data) curr = curr->left;
+            else if (value > curr->data) curr = curr->right;
+            else return;
+        }
+        if (value < parent->data) parent->left = new Node(value);
+        else parent->right = new Node(value);
+    }
+
+    
+    bool search(int value) {
+        Node* curr = root;
+        while (curr) {
+            if (value == curr->data) return true;
+            curr = (value < curr->data) ? curr->left : curr->right;
+        }
+        return false;
+    }
+
+    
+    void remove(int value) {
+        root = deleteRecursive(root, value);
+    }
+};
+
+
+void run_test(int count) {
+    BinarySearchTree tree;
+    vector<int> values;
+
+   
+    for (int i = 0; i < count; i++) {
+        values.push_back(rand() % 100000);
+    }
+
+    cout << "--------- Result for " << count << " elements ===" << endl;
+
+    
+    auto s1 = chrono::high_resolution_clock::now();
+    for (int v : values) tree.insert(v);
+    auto e1 = chrono::high_resolution_clock::now();
+    cout << "Insert:    " << chrono::duration<double, micro>(e1 - s1).count() << " mcs" << endl;
+
+    
+    auto s2 = chrono::high_resolution_clock::now();
+    tree.search(values.back());
+    auto e2 = chrono::high_resolution_clock::now();
+    cout << "Search:     " << chrono::duration<double, micro>(e2 - s2).count() << " mcs" << endl;
+
+    
+    auto s3 = chrono::high_resolution_clock::now();
+    tree.remove(values.front());
+    auto e3 = chrono::high_resolution_clock::now();
+    cout << "Remove: " << chrono::duration<double, micro>(e3 - s3).count() << " mcs" << endl;
+
+    cout << "---------------------------------------" << endl << endl;
+}
+
+int main() {
+    
+    srand(time(0));
+
+    
+    run_test(100);
+    run_test(1000);
+    run_test(10000);
+
+    return 0;
+}
