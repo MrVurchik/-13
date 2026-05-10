@@ -1,0 +1,101 @@
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <chrono>
+
+using namespace std;
+using namespace std::chrono;
+
+int main() {
+    srand(time(0));
+    cout << "How many top for list: ";
+    int k;
+    cin >> k;
+    int m = k * 2;
+
+    vector<vector<int>> list(k);
+
+    for (int i = 0; i < m; i++) {
+        int value = rand() % k;
+        int index = rand() % k;
+        if (index != value) {
+            bool exists = false;
+            for (int v : list[index]) {
+                if (v == value) { exists = true; break; }
+            }
+            if (!exists) {
+                list[index].push_back(value);
+                list[value].push_back(index);
+            }
+            else i--;
+        }
+        else i--;
+    }
+
+    for (int i = 0; i < k; i++) {
+        cout << "For top " << i << ": ";
+        for (int v : list[i]) cout << v << " ";
+        cout << endl;
+    }
+
+    cout << "Between which top you want finding way: ";
+    int f1, f2;
+    cin >> f1 >> f2;
+
+    auto start1 = high_resolution_clock::now();
+    if (f1 != f2) {
+        bool found = false;
+        for (int v : list[f1]) {
+            if (v == f2) { found = true; break; }
+        }
+        if (found) cout << "way exist\n";
+        else cout << "way not exist\n";
+    }
+    else cout << "way not exist\n";
+    auto stop1 = high_resolution_clock::now();
+    auto duration1 = duration_cast<nanoseconds>(stop1 - start1);
+    cout << "Time (list check): " << duration1.count() << " ns\n";
+
+    cout << "------------------------ \n";
+    cout << "How many top for arr: ";
+    int f;
+    cin >> f;
+    int m2 = f * 2;
+
+    vector<vector<int>> arr(f, vector<int>(f, 0));
+
+    for (int i = 0; i < m2; i++) {
+        int value2 = rand() % f;
+        int index2 = rand() % f;
+        if (index2 != value2 && arr[index2][value2] == 0) {
+            arr[index2][value2] = 1;
+            arr[value2][index2] = 1;
+        }
+        else i--;
+    }
+
+    for (int i = 0; i < f; i++) {
+        for (int j = 0; j < f; j++) {
+            cout << arr[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    cout << "Between which top you want finding way (array): ";
+    int a1, a2;
+    cin >> a1 >> a2;
+
+    auto start2 = high_resolution_clock::now();
+    if (a1 != a2 && arr[a1][a2] == 1) {
+        cout << "way exist\n";
+    }
+    else {
+        cout << "way not exist\n";
+    }
+    auto stop2 = high_resolution_clock::now();
+    auto duration2 = duration_cast<nanoseconds>(stop2 - start2);
+    cout << "Time (array check): " << duration2.count() << " ns\n";
+
+    return 0;
+}
