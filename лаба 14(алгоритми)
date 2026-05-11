@@ -1,0 +1,101 @@
+#include <iostream>
+#include <vector>
+#include <cstdlib> 
+#include <ctime>   
+#include <chrono>  
+
+using namespace std;
+using namespace std::chrono;
+void InsertSort(vector<int>& arr) {
+    for (int i = 1; i < arr.size(); i++) {
+        int key = arr[i];
+        int j = i - 1;
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = key;
+    }
+}
+
+int main() {
+    srand(time(0)); 
+    int si[] = { 100, 1000, 10000 };
+    for (int s : si) {
+        system("cls");
+        cout << "------------For " << s << " elements----------" << endl;
+        vector<int> arr(s + 1);
+        for (int i = 0; i < s; i++) {
+            arr[i] = rand() % s;
+        }
+
+        cout << "Array full" << endl;
+        cout << "Which element you want find (Linear): ";
+        int key;
+        cin >> key;
+
+        arr[s] = key; 
+        int l = 0;
+
+        
+        auto start1 = high_resolution_clock::now();
+        while (arr[l] != key) {
+            l++;
+        }
+        auto stop1 = high_resolution_clock::now();
+        auto duration1 = duration_cast<nanoseconds>(stop1 - start1);
+
+        if (l < s) {
+            cout << "Element found under index " << l << endl;
+        }
+        else {
+            cout << "Element not exist" << endl;
+        }
+        cout << "Time " << duration1.count() << " ns" << endl;
+
+        
+        arr[s] = 0; 
+        cout << "-----------Binary Search--------------" << endl;
+
+        InsertSort(arr); 
+
+        cout << "Which element you want find (Binary): ";
+        int key2;
+        cin >> key2;
+
+        int left = 0;
+        int right = s;
+        bool found = false;
+        int foundIdx = -1;
+
+       
+        auto start2 = high_resolution_clock::now();
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (arr[mid] == key2) {
+                foundIdx = mid;
+                found = true;
+                break;
+            }
+            else if (arr[mid] < key2) left = mid + 1;
+            else right = mid - 1;
+        }
+        auto stop2 = high_resolution_clock::now();
+        auto duration2 = duration_cast<nanoseconds>(stop2 - start2);
+
+        if (found) {
+            cout << "Element found under index " << foundIdx << endl;
+        }
+        else {
+            cout << "El not exist" << endl;
+        }
+        cout << "Time " << duration2.count() << " ns" << endl;
+
+        
+        cout << "\nDone with " << s << ". Press Enter for next size...";
+        cin.ignore(1000, '\n');
+        cin.get();
+    }
+
+    return 0;
+}
