@@ -1,0 +1,101 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+
+int Get_Hash(int value, int size) {
+    float A = 0.618f;
+    double temp = A * value;
+    double fractionalPart = temp - (long)temp;
+    return (int)(size * fractionalPart);
+}
+
+
+void Insert(vector<int> table[], int value, int size) {
+    int k = Get_Hash(value, size);
+    table[k].push_back(value); 
+    cout << "Element " << value << " added at index " << k << endl;
+}
+
+
+void Search(vector<int> table[], int value, int size) {
+    int k = Get_Hash(value, size);
+    bool found = false;
+    for (int i : table[k]) {
+        if (i == value) {
+            found = true;
+            break;
+        }
+    }
+    if (found) {
+        cout << "Element " << value << " found at index " << k << endl;
+    }
+    else {
+        cout << "Element " << value << " not found" << endl;
+    }
+}
+
+
+void Delete(vector<int> table[], int value, int size) {
+    int k = Get_Hash(value, size); 
+    for (int i = 0; i < table[k].size(); i++) {
+        if (table[k][i] == value) { 
+            table[k].erase(table[k].begin() + i); 
+            cout << "Element deleted" << endl;
+            return; 
+        }
+    }
+
+    cout << "Element not exist" << endl;
+}
+
+
+void Print(vector<int> table[], int size) {
+    for (int i = 0; i < size; i++) {
+        cout << "Index " << i << " has elements: ";
+        for (int j : table[i]) {
+            cout << j << " ";
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    int size;
+    cout << "Size of hash table: ";
+    cin >> size;
+
+    
+    vector<int>* table = new vector<int>[size];
+
+    while (true) {
+        cout << "\n1) Add\n2) Search\n3) Delete\n4) Print\n5) Exit\nChoice: ";
+        int choice;
+        cin >> choice;
+        if (choice == 5) break;
+
+        int num;
+        switch (choice) {
+        case 1:
+            cout << "Enter num: "; cin >> num;
+            Insert(table, num, size);
+            break;
+        case 2:
+            cout << "Enter num: "; cin >> num;
+            Search(table, num, size);
+            break;
+        case 3:
+            cout << "Enter num: "; cin >> num;
+            Delete(table, num, size);
+            break;
+        case 4:
+            Print(table, size);
+            break;
+        }
+    }
+
+    delete[] table; 
+    return 0;
+}
