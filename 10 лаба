@@ -1,0 +1,15 @@
+class Dog:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+    def Hello(self):
+        print(f"Hello, my name is {self.name} and I am {self.age} years old")
+    def __str__(self):
+        return f"Yet hello, I am still {self.name} and soon I will be {self.age} years old"
+        
+dog = Dog("Jack", 15)
+dog.Hello()
+print(dog)
+        
+
+
